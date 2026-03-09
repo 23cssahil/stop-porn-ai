@@ -12,8 +12,8 @@ export default function Dashboard() {
   const [partnerEmail, setPartnerEmail] = useState("");
   const [showAgreement, setShowAgreement] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [streak, setStreak] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
     // Generate or retrieve a persistent userId for this browser
@@ -45,9 +45,11 @@ export default function Dashboard() {
           const now = new Date().getTime();
           const remaining = Math.floor((end - now) / 1000);
           setTimeLeft(remaining > 0 ? remaining : 0);
+          setStreak(Number(data.streak) || 0);
         } else {
           setIsLocked(false);
           setTimeLeft(0);
+          setStreak(Number(data.streak) || 0);
         }
       } catch (e: any) {
         console.error("Failed to fetch status", e);
@@ -98,6 +100,7 @@ export default function Dashboard() {
         const end = new Date(data.lockUntil).getTime();
         const now = new Date().getTime();
         setTimeLeft(Math.floor((end - now) / 1000));
+        setStreak(Number(data.streak) || 0);
         setShowAgreement(false);
       }
     } catch (e) {
@@ -193,7 +196,7 @@ export default function Dashboard() {
                     {isLoading && <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }} className="w-3 h-3 border-2 border-yellow-500 border-t-transparent rounded-full" />}
                   </div>
                   <div className="text-4xl font-black text-white">
-                    {isLoading ? "---" : "12"} <span className="text-sm font-normal text-zinc-500">Days</span>
+                    {isLoading ? "---" : streak} <span className="text-sm font-normal text-zinc-500">Days</span>
                   </div>
                 </div>
                 <div className="p-6 rounded-2xl bg-black/30 border border-white/5">
