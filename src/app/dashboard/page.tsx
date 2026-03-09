@@ -149,22 +149,36 @@ export default function Dashboard() {
                 <Lock className="w-32 h-32" />
               </div>
               
-              <h1 className="text-3xl font-bold mb-2">Commitment Dashboard</h1>
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-3xl font-bold">Commitment Dashboard</h1>
+                <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-500 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  ID: {userId || "Generating..."}
+                </div>
+              </div>
               <p className="text-zinc-400 mb-8 max-w-md">Your willpower is your superpower. Stay disciplined, stay focused, and reach your peak performance.</p>
 
               {error && (
-                <div className="mb-8 p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 space-y-3">
-                  <div className="flex items-center gap-3 font-bold">
+                  <div className="flex items-center gap-3 font-bold text-sm">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                    System Synchronization Error
+                    Database Sync Error
                   </div>
-                  <p className="text-xs leading-relaxed opacity-80">{error}</p>
-                  <button 
-                    onClick={() => window.location.reload()}
-                    className="text-[10px] uppercase tracking-widest bg-red-500/20 px-3 py-1 rounded-full hover:bg-red-500/30 transition-all font-bold"
-                  >
-                    Retry Connection
-                  </button>
+                  <p className="text-xs leading-relaxed opacity-80 font-mono bg-black/20 p-2 rounded-lg">{error}</p>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => window.location.reload()}
+                      className="text-[10px] uppercase tracking-widest bg-red-500/20 px-3 py-1.5 rounded-lg hover:bg-red-500/30 transition-all font-bold border border-red-500/20"
+                    >
+                      Retry Sync
+                    </button>
+                    <Link 
+                      href="/api/debug" 
+                      target="_blank"
+                      className="text-[10px] uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all font-bold border border-white/10"
+                    >
+                      Check Server Config
+                    </Link>
+                  </div>
                 </div>
               )}
 
