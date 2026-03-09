@@ -15,6 +15,8 @@ export default function Dashboard() {
   const [streak, setStreak] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
+  const [showExtensionGuide, setShowExtensionGuide] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Generate or retrieve a persistent userId for this browser
@@ -103,6 +105,7 @@ export default function Dashboard() {
         setTimeLeft(Math.floor((end - now) / 1000));
         setStreak(Number(data.streak) || 0);
         setShowAgreement(false);
+        setShowExtensionGuide(true); // Show extension install guide after agreement
       }
     } catch (e) {
       alert("Lock failed. Check connection.");
@@ -435,6 +438,92 @@ export default function Dashboard() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Extension Installation Guide - appears after agreement */}
+      <AnimatePresence>
+        {showExtensionGuide && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-[#0a0a0b] flex items-center justify-center p-6"
+          >
+            <div className="w-full max-w-2xl">
+              {/* Header */}
+              <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+                <div className="w-20 h-20 bg-green-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-green-500/20">
+                  <CheckCircle2 className="w-10 h-10 text-green-500" />
+                </div>
+                <h1 className="text-4xl font-black text-white mb-3 uppercase tracking-tight">Contract Signed! 🔒</h1>
+                <p className="text-zinc-400 text-lg">Ab Extension install karo — ye aapka digital shield hai.</p>
+              </motion.div>
+
+              {/* Steps */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="space-y-4 mb-8">
+                {/* Step 1 */}
+                <div className="flex gap-4 items-start p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">1</div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold mb-1">Extension download karein</p>
+                    <p className="text-zinc-400 text-sm mb-3">ZIP file mein hi extension hai. Download hone ke baad unzip karein.</p>
+                    <a 
+                      href="https://github.com/23cssahil/stop-porn-ai/archive/refs/heads/main.zip"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold transition-all"
+                    >
+                      ⬇️ Download Extension ZIP
+                    </a>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex gap-4 items-start p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">2</div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold mb-1">Chrome Extensions page kholein</p>
+                    <p className="text-zinc-400 text-sm mb-3">Niche wala URL copy karke Chrome ke address bar mein paste karein aur Enter dabaiye:</p>
+                    <div className="flex gap-2">
+                      <code className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm font-mono">chrome://extensions/</code>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText('chrome://extensions/');
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all border ${copied ? 'bg-green-600 border-green-500 text-white' : 'bg-white/5 border-white/10 hover:bg-white/10 text-zinc-300'}`}
+                      >
+                        {copied ? '✅ Copied!' : '📋 Copy'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex gap-4 items-start p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                  <div className="w-10 h-10 rounded-2xl bg-yellow-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0">3</div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold mb-2">Developer Mode ON karein aur Load Unpacked</p>
+                    <div className="space-y-1.5 text-zinc-400 text-sm">
+                      <p>→ Extensions page mein <strong className="text-white">Developer Mode</strong> toggle ON karein (top-right)</p>
+                      <p>→ <strong className="text-white">Load Unpacked</strong> button par click karein</p>
+                      <p>→ Unzipped folder ke andar <strong className="text-white">extension</strong> folder select karein</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => setShowExtensionGuide(false)}
+                className="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white font-bold transition-all border border-white/10"
+              >
+                Baad mein karunga → Dashboard par jao
+              </motion.button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
