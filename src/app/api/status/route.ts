@@ -12,8 +12,14 @@ export async function GET(req: NextRequest) {
   try {
     const sheet = await initSheet();
     const rows = await sheet.getRows();
+    console.log(`Checking status for ${userId}. Total rows in sheet: ${rows.length}`);
     
-    const row = rows.find(r => r.get('userId')?.toString() === userId?.toString());
+    const row = rows.find(r => {
+      const rowId = r.get('userId')?.toString();
+      const match = rowId === userId;
+      console.log(`Comparing ${rowId} with ${userId}: ${match}`);
+      return match;
+    });
 
     if (!row) {
       console.log("No data found for user:", userId);
