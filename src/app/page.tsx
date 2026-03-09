@@ -41,9 +41,9 @@ export default function Home() {
           <Link href="/dashboard" className="flex-1 py-4 px-8 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 font-bold text-lg hover:opacity-90 transition-all shadow-2xl shadow-purple-600/20 flex items-center justify-center gap-2">
             Start Your Journey <ArrowRight className="w-5 h-5" />
           </Link>
-          <a href="#extension" className="flex-1 py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 font-bold text-lg transition-all border border-white/10 flex items-center justify-center">
+          <Link href="#extension" className="flex-1 py-4 px-8 rounded-2xl bg-white/5 hover:bg-white/10 font-bold text-lg transition-all border border-white/10 flex items-center justify-center">
             Chrome Extension
-          </a>
+          </Link>
         </div>
 
         <div id="extension" className="mt-40 w-full pt-20 border-t border-white/5 text-left">
