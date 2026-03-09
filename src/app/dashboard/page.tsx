@@ -377,6 +377,16 @@ export default function Dashboard() {
             </motion.div>
           </div>
         </div>
+
+        {/* Footer Navigation */}
+        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+          <Link href="/" className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm">
+            <ArrowLeft className="w-4 h-4" /> Back to Home Page
+          </Link>
+          <p className="text-zinc-600 text-xs uppercase tracking-widest">
+            PureWill AI Guardian v1.0.4 • {isLoading ? "Syncing..." : "Protected"}
+          </p>
+        </div>
       </main>
 
       {/* Modal / Agreement */}
