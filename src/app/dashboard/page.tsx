@@ -149,23 +149,35 @@ export default function Dashboard() {
               </div>
               
               <h1 className="text-3xl font-bold mb-2">Commitment Dashboard</h1>
-              <p className="text-zinc-400 mb-8 max-w-md">Your willpower is your superpower. Stay disciplined, stay focused, and reach your peak performance. {userId}</p>
+              <p className="text-zinc-400 mb-8 max-w-md">Your willpower is your superpower. Stay disciplined, stay focused, and reach your peak performance.</p>
 
               {error && (
-                <div className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  {error}
+                <div className="mb-8 p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 space-y-3">
+                  <div className="flex items-center gap-3 font-bold">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    System Synchronization Error
+                  </div>
+                  <p className="text-xs leading-relaxed opacity-80">{error}</p>
+                  <button 
+                    onClick={() => window.location.reload()}
+                    className="text-[10px] uppercase tracking-widest bg-red-500/20 px-3 py-1 rounded-full hover:bg-red-500/30 transition-all font-bold"
+                  >
+                    Retry Connection
+                  </button>
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-black/30 border border-white/5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Zap className="w-5 h-5 text-yellow-500" />
-                    <span className="font-semibold">Current Streak</span>
+                <div className="p-6 rounded-2xl bg-black/30 border border-white/5 relative group">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <Zap className="w-5 h-5 text-yellow-500" />
+                      <span className="font-semibold">Current Streak</span>
+                    </div>
+                    {isLoading && <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }} className="w-3 h-3 border-2 border-yellow-500 border-t-transparent rounded-full" />}
                   </div>
                   <div className="text-4xl font-black text-white">
-                    {isLoading ? "..." : "12"} <span className="text-sm font-normal text-zinc-500">Days</span>
+                    {isLoading ? "---" : "12"} <span className="text-sm font-normal text-zinc-500">Days</span>
                   </div>
                 </div>
                 <div className="p-6 rounded-2xl bg-black/30 border border-white/5">
@@ -174,13 +186,13 @@ export default function Dashboard() {
                     <span className="font-semibold">Time Remaining</span>
                   </div>
                   <div className="text-2xl font-mono text-white tabular-nums tracking-tighter">
-                    {isLoading ? "Syncing..." : isLocked ? formatTime(timeLeft) : "00d 00h 00m 00s"}
+                    {isLoading ? "Initialising..." : isLocked ? formatTime(timeLeft) : "00d 00h 00m 00s"}
                   </div>
                 </div>
               </div>
 
               {!isLocked ? (
-                <div className={`mt-8 space-y-6 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}>
+                <div className={`mt-8 space-y-6 ${isLoading ? "opacity-40 pointer-events-none" : ""}`}>
                   <div className="p-6 rounded-2xl bg-purple-500/5 border border-purple-500/10">
                     <h3 className="font-semibold mb-4 flex items-center gap-2">
                         <Lock className="w-4 h-4 text-purple-500" />
@@ -205,9 +217,10 @@ export default function Dashboard() {
 
                   <button 
                     onClick={() => setShowAgreement(true)}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 font-bold text-lg hover:opacity-90 transition-opacity shadow-lg shadow-purple-600/20 disabled:opacity-50"
+                    disabled={isLoading}
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 font-bold text-lg hover:opacity-90 transition-opacity shadow-lg shadow-purple-600/20 disabled:grayscale"
                   >
-                    Initiate Digital Lockdown
+                    {isLoading ? "Checking Status..." : "Initiate Digital Lockdown"}
                   </button>
                 </div>
               ) : (
@@ -215,9 +228,9 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3 text-green-500">
                       <CheckCircle2 className="w-6 h-6" />
-                      <span className="font-semibold">Lockdown Active - AI Guardian Engaged</span>
+                      <span className="font-semibold uppercase tracking-tight text-sm">Lockdown Active - AI Guardian Engaged</span>
                     </div>
-                    <div className="text-zinc-500 text-sm italic">Deactivation buttons hidden</div>
+                    {isLoading && <span className="text-[10px] text-zinc-500 animate-pulse uppercase tracking-widest">Updating...</span>}
                   </div>
 
                   <div className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-4">
