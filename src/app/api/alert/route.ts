@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+// DO NOT initialize Resend at module level — it crashes builds when RESEND_API_KEY is missing
 export async function POST(req: NextRequest) {
   try {
     const { partnerEmail, eventType } = await req.json();
@@ -10,6 +9,14 @@ export async function POST(req: NextRequest) {
     if (!partnerEmail) {
       return NextResponse.json({ error: 'No partner email found' }, { status: 400 });
     }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('RESEND_API_KEY not set — alert email skipped');
+      return NextResponse.json({ success: true, warning: 'Email not sent, RESEND_API_KEY missing' });
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
 
     const message = eventType === 'UNINSTALL' 
       ? 'Attempted to UNINSTALL the protection extension.' 
