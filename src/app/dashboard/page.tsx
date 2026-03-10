@@ -536,6 +536,20 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
+
+                {/* Step 4 */}
+                <div className="flex gap-4 items-start p-5 rounded-2xl bg-purple-900/20 border border-purple-500/30 ring-1 ring-purple-500/50">
+                  <div className="w-10 h-10 rounded-2xl bg-red-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0 animate-pulse">4</div>
+                  <div className="flex-1">
+                    <p className="text-white font-bold mb-2">CRITICAL: Incognito Mode Allow Karein</p>
+                    <div className="space-y-1.5 text-zinc-300 text-sm">
+                      <p>Incognito mein block karne ke liye ye zaroori hai:</p>
+                      <p>→ Extensions page mein <strong className="text-white">PureWill AI Guardian</strong> ke <strong>Details</strong> par click karein.</p>
+                      <p>→ Scroll karke <strong className="text-red-400">"Allow in Incognito"</strong> toggle ko ON karein.</p>
+                      <p className="text-[10px] text-zinc-500 mt-2 italic">Bina iske, Chrome Incognito windows mein extension ko block karne se rokta hai.</p>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
 
               <motion.button
