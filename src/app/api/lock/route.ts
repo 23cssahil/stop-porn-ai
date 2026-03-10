@@ -16,19 +16,25 @@ export async function POST(req: NextRequest) {
     const rows = await sheet.getRows();
     console.log(`Found ${rows.length} rows`);
     
-    let row = rows.find(r => r.get('userId')?.toString() === userId?.toString());
+    let row = rows.find(r => r.get('userID')?.toString() === userId?.toString());
+    
+    const startDate = new Date().toISOString();
 
     if (row) {
       console.log("Updating existing row for user:", userId);
       row.set('lockUntil', lockUntil.toISOString());
       row.set('partnerEmail', partnerEmail);
+      if (!row.get('startDate')) {
+        row.set('startDate', startDate);
+      }
       await row.save();
     } else {
       console.log("Adding new row for user:", userId);
       await sheet.addRow({
-        userId: userId.toString(),
+        userID: userId.toString(),
         email: email || 'no-email',
         lockUntil: lockUntil.toISOString(),
+        startDate: startDate,
         streak: '0',
         partnerEmail: partnerEmail || ''
       });

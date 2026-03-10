@@ -34,13 +34,13 @@ export async function initSheet() {
       console.log("Creating UserData tab...");
       sheet = await doc.addSheet({ 
         title: 'UserData', 
-        headerValues: ['userId', 'email', 'lockUntil', 'streak', 'partnerEmail'] 
+        headerValues: ['userID', 'email', 'lockUntil', 'startDate', 'streak', 'partnerEmail'] 
       });
     } else {
       await sheet.loadHeaderRow();
       if (sheet.headerValues.length === 0) {
         console.log("Sheet is empty, setting headers...");
-        await sheet.setHeaderRow(['userId', 'email', 'lockUntil', 'streak', 'partnerEmail']);
+        await sheet.setHeaderRow(['userID', 'email', 'lockUntil', 'startDate', 'streak', 'partnerEmail']);
       }
     }
     return sheet;

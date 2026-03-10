@@ -15,26 +15,26 @@ export async function GET(req: NextRequest) {
     console.log(`Checking status for ${userId}. Total rows in sheet: ${rows.length}`);
     
     const row = rows.find(r => {
-      const rowId = r.get('userId')?.toString();
-      const match = rowId === userId;
-      console.log(`Comparing ${rowId} with ${userId}: ${match}`);
+      const rowId = r.get('userID');
+      const match = rowId?.toString() === userId;
       return match;
     });
-
+ 
     if (!row) {
       console.log("No data found for user:", userId);
       return NextResponse.json({ isLocked: false });
     }
-
+ 
     const lockUntilStr = row.get('lockUntil');
     const lockUntil = new Date(lockUntilStr);
     const isLocked = lockUntil > new Date();
-
+ 
     console.log(`User ${userId} - isLocked: ${isLocked}, lockUntil: ${lockUntilStr}`);
-
+ 
     return NextResponse.json({
       isLocked,
       lockUntil: lockUntilStr,
+      startDate: row.get('startDate') || '',
       streak: row.get('streak')
     });
   } catch (error: any) {

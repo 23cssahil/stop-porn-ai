@@ -1,32 +1,28 @@
-// Basic NSFW-JS Integration for image blurring
-// Note: In a production extension, you'd bundle nsfwjs or load it carefully.
-// This is a conceptual implementation of the scanning logic.
+// 1. Sync Bridge: Listen for status updates from the Web App
+window.addEventListener("purewill_sync", (event) => {
+    // Standard DOM event detail access
+    const detail = event.detail;
+    console.log("PureWill Sync Event received:", detail);
+    if (detail) {
+        chrome.runtime.sendMessage({ 
+            type: "SYNC_LOCK", 
+            isLocked: detail.isLocked,
+            partnerEmail: detail.partnerEmail
+        });
+    }
+});
 
+// 2. Image Blurring logic (NSFW-JS Integration)
 async function scanImages() {
   const images = document.querySelectorAll("img");
-  
   images.forEach(img => {
-    // Add a temporary blur filter until scanned
     img.style.filter = "blur(10px)";
-    
-    // In a real implementation, you would load the model and predict:
-    // const model = await nsfwjs.load();
-    // const predictions = await model.classify(img);
-    // if (predictions[0].className === 'Porn' || predictions[0].className === 'Hentai') {
-    //   img.style.filter = "blur(50px) grayscale(100%)";
-    //   img.style.pointerEvents = "none";
-    // } else {
-    //   img.style.filter = "none";
-    // }
-
-    // Simulation for now:
     setTimeout(() => {
-        // img.style.filter = "none"; 
+        // img.style.filter = "none"; // Simulation placeholder
     }, 1000);
   });
 }
 
-// Observe DOM for new images
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes.length) {
@@ -35,7 +31,7 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
-
-// Initial scan
-scanImages();
+if (document.body) {
+  observer.observe(document.body, { childList: true, subtree: true });
+  scanImages();
+}

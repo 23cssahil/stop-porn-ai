@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [streak, setStreak] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
   const [showExtensionGuide, setShowExtensionGuide] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -49,10 +50,21 @@ export default function Dashboard() {
           const remaining = Math.floor((end - now) / 1000);
           setTimeLeft(remaining > 0 ? remaining : 0);
           setStreak(Number(data.streak) || 0);
+          setStartDate(data.startDate || "");
+          
+          // Auto-sync with Extension via DOM Event
+          window.dispatchEvent(new CustomEvent("purewill_sync", {
+            detail: { isLocked: true, partnerEmail: data.partnerEmail }
+          }));
         } else {
           setIsLocked(false);
           setTimeLeft(0);
           setStreak(Number(data.streak) || 0);
+          setStartDate("");
+          // Notify extension to unlock
+          window.dispatchEvent(new CustomEvent("purewill_sync", {
+            detail: { isLocked: false }
+          }));
         }
       } catch (e: any) {
         console.error("Failed to fetch status", e);
@@ -104,6 +116,13 @@ export default function Dashboard() {
         const now = new Date().getTime();
         setTimeLeft(Math.floor((end - now) / 1000));
         setStreak(Number(data.streak) || 0);
+        setStartDate(new Date().toISOString());
+        
+        // Immediate Sync with Extension
+        window.dispatchEvent(new CustomEvent("purewill_sync", {
+          detail: { isLocked: true, partnerEmail }
+        }));
+
         setShowAgreement(false);
         setShowExtensionGuide(true); // Show extension install guide after agreement
       }
@@ -211,6 +230,12 @@ export default function Dashboard() {
                   <div className="text-2xl font-mono text-white tabular-nums tracking-tighter">
                     {isLoading ? "Initialising..." : isLocked ? formatTime(timeLeft) : "00d 00h 00m 00s"}
                   </div>
+                  {isLocked && startDate && (
+                    <div className="mt-2 text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                       <CheckCircle2 className="w-3 h-3 text-green-500" />
+                       Started: {new Date(startDate).toLocaleString()}
+                    </div>
+                  )}
                 </div>
               </div>
 
