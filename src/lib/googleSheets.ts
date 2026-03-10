@@ -7,17 +7,20 @@ const SCOPES = [
 ];
 
 export async function initSheet() {
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  const sheetId = process.env.GOOGLE_SHEET_ID?.trim();
+  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL?.trim();
+  let privateKey = process.env.GOOGLE_PRIVATE_KEY?.trim() || '';
 
   if (!sheetId || !clientEmail || !privateKey) {
     throw new Error(`Missing environment variables: ${!sheetId ? 'GOOGLE_SHEET_ID ' : ''}${!clientEmail ? 'GOOGLE_SERVICE_ACCOUNT_EMAIL ' : ''}${!privateKey ? 'GOOGLE_PRIVATE_KEY' : ''}`);
   }
 
+  // Handle both escaped \n and actual newlines correctly for Vercel formatting
+  privateKey = privateKey.replace(/\\n/g, '\n');
+
   const jwt = new JWT({
     email: clientEmail,
-    key: privateKey.replace(/\\n/g, '\n'),
+    key: privateKey,
     scopes: SCOPES,
   });
 
